@@ -1,0 +1,170 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Loic Game !</title>
+    <style>
+
+        body {
+            margin:0;
+
+            -webkit-user-select: none; /* Safari */        
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            user-select: none; /* Standard */
+
+            text-align:center;
+        }
+
+        .name {
+            width: 100vw;
+            background-color: lightpink;
+            border: solid darkgreen 3px;
+            padding: 2px;
+            margin-bottom:2px;
+        }
+
+        .status {
+            background-color: lightcyan;
+            border: solid darkgreen 3px;
+            margin-bottom:2px;
+            height: 100px;
+        }
+
+        .statusItem {
+            display: cell;
+            color:darkgreen;
+        }
+
+        .statusItem .statusItemTitle {
+            font-weight: bold;
+            display: table-cell;
+            height:27px;
+            vertical-align: middle;
+            padding:3px;
+        }
+        .statusItem .statusItemValue {
+            padding:3px;
+            display: table-cell;
+            vertical-align: middle;
+            font-size: 20px;
+        }
+
+        .event {
+            background-color: lightcyan;
+            border: solid darkgreen 3px;
+            margin-bottom:2px;
+            min-height: 300px;
+        }
+
+        .action {
+            background-color: lightcyan;
+            border: solid darkgreen 3px;
+            padding:10px;
+        }
+
+        .action {
+            height: 80px;
+        }
+
+        .actionYes,
+        .actionNo {
+            float:left;
+        }
+        .actionYes button,
+        .actionNo button {
+            height:80px;
+            width:150px;
+            margin-right:10px;
+        }
+
+    </style>
+</head>
+<body>
+    <script src="/public/js/jquery-3.5.1.min.js"></script>
+
+    <script>
+
+        function doAction(value) {
+            $("[name='actionType']").val(value);
+            $("#actionForm").submit();
+        }
+
+        $(document).ready(() => {
+            $("#btnActionYes").click(() => { doAction("yes")});
+            $("#btnActionNo").click(() => { doAction("no")});
+
+
+            window.setTimeout(() => {
+                let result = "<%= result %>";
+                let isWinner = "<%= isWinner %>";
+                let isLooser = "<%= isLooser %>";
+
+                if(result != "") {
+                    alert(result);
+                }
+
+                if(isWinner == "1" ) {
+                    alert("おめでとう！ロイクは幸せになった！");
+                    window.location.replace("/login");
+                }
+
+                if(isLooser == "1" ) {
+                    alert("あらま、ロイクが悲しくなった。もう一回ロイクを幸せにするために頑張りましょう！");
+                    window.location.replace("/login");
+                }
+            }, 200)
+
+        });
+
+    </script>
+    <div class="container">
+        <div class="name">
+            Welcome <%= username %>
+        </div>
+        <div class="status">
+            <div class="statusItem">
+                <span  class="statusItemTitle">食糧</span >
+                <span id="foodStatus" class="statusItemValue">
+<% for(var i=1; i<=10; i++) { if(i<=status.food) {%>■<%} else {%>□<%} } %>
+                </span >
+            </div>
+            <div class="statusItem">
+                <span  class="statusItemTitle">ハッピー</span >
+                <span id="happyStatus"  class="statusItemValue">
+<% for(var i=1; i<=10; i++) { if(i<=status.happy) {%>■<%} else {%>□<%} } %>
+                </span >
+            </div>
+            <div class="statusItem">
+                <span  class="statusItemTitle">元気</span >
+                <span id="strengthStatus"  class="statusItemValue">
+<% for(var i=1; i<=10; i++) { if(i<=status.strength) {%>■<%} else {%>□<%} } %>
+                </span >
+            </div>
+        </div>
+        <div class="event">
+            <%= event.description %>
+        </div>
+        <div class="action">
+            <form id="actionForm">
+                <input type="hidden" name="eventId" value="<%= event.id %>"/>
+                <input type="hidden" name="actionType"/>
+                <div class="actionYes">
+                    <button id="btnActionYes"><%= event.yes.text %></button>
+                </div>
+                <div class="actionNo">
+                    <button id="btnActionNo"><%= event.no.text %></button>
+                </div>
+            </form>
+        </div>
+        <div class="win">
+    
+        </div>
+        <div class="lose">
+    
+        </div>
+    </div>
+    
+</body>
+</html>
