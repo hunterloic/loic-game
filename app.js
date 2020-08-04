@@ -62,9 +62,9 @@ app.get('/', (req, res, next) => {
 
         let result = "";
 
-        if(req.query.eventId) {
-            
-            let previousEvent = events[parseInt(req.query.eventId) - 1];
+        if(req.session.currentEvent) {
+
+            const previousEvent = req.session.currentEvent;
 
             if(req.query.actionType == "yes") {
                 req.session.food += previousEvent.yes.food;
@@ -89,7 +89,14 @@ app.get('/', (req, res, next) => {
 
         }
 
-        let event = events[0];
+
+        if(events.list().length == 0) {
+            events.init();
+            events.shuffle();
+        }
+
+        const currentEvent = events.list().pop();
+        req.session.currentEvent = currentEvent;
 
         let status = {
             food : req.session.food,
@@ -101,7 +108,7 @@ app.get('/', (req, res, next) => {
             'index', 
             { 
                 username: req.session.username,
-                event: event,
+                event: currentEvent,
                 status: status,
                 result : result,
                 isWinner : (req.session.food == 10 && req.session.happy == 10 && req.session.strength == 10) ? "1" : "0",
@@ -125,6 +132,9 @@ app.get('/login', (req, res, next) => {
 
 app.post('/login', (req, res, next) => {
     try {
+        events.init();
+        events.shuffle();
+        req.session.currentEvent = null;
         req.session.username = req.body.username;
         req.session.happy = 5;
         req.session.food = 5;

@@ -55,7 +55,7 @@
             background-color: lightcyan;
             border: solid darkgreen 3px;
             margin-bottom:2px;
-            min-height: 300px;
+            min-height: 150px;
         }
 
         .action {
@@ -148,7 +148,6 @@
         </div>
         <div class="action">
             <form id="actionForm">
-                <input type="hidden" name="eventId" value="<%= event.id %>"/>
                 <input type="hidden" name="actionType"/>
                 <div class="actionYes">
                     <button id="btnActionYes"><%= event.yes.text %></button>
